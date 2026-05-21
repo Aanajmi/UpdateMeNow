@@ -1,39 +1,50 @@
 # UpdateMeNow
 
-UpdateMeNow is a Python command-line tool that collects recent cybersecurity updates from RSS feeds and official APIs, then turns them into a clean Excel report.
+UpdateMeNow is a Python 3.11+ command-line tool for collecting recent cybersecurity updates from free public RSS feeds and official public APIs, then turning them into a clean Excel report.
 
-It is built for people who want a quick snapshot of recent advisories, CVEs, vendor updates, and security news without manually checking a long list of websites.
+The tool exists for one practical reason: a technical user should be able to run one command, get a reliable snapshot of current cyber advisories and vulnerability news, and not have to manually chase feeds, websites, or spreadsheets.
 
-Run one command:
+This public release is intentionally simple:
 
-```bash
-umn
-```
+- one CLI entry point: `umn`
+- one default action: `umn scan`
+- one default export: Excel
+- one default time window: last 6 hours
+- no scraping, no database, no dashboard, no AI summaries
 
-Get a report:
+## Why This Project Exists
 
-```text
-reports/UpdateMeNow_Report_YYYY-MM-DD_6h.xlsx
-```
+Security information is scattered across many sources:
 
-## What It Does
+- government advisories
+- vulnerability trackers
+- vendor security blogs
+- threat research feeds
+- security news outlets
 
-UpdateMeNow helps you:
+UpdateMeNow consolidates those signals into a single report so you can:
 
-- collect recent cybersecurity updates from configured sources
-- scan the last 6 hours by default
-- export results to Excel by default
-- optionally export results to JSON
-- filter by source, keyword, vendor, or time range
-- detect CVEs in titles and descriptions
-- match vendors and products from a configurable watchlist
-- remove obvious duplicates
-- group results by source
-- sort results newest to oldest
+- spot what changed recently
+- filter by source, keyword, or vendor
+- see CVEs and matches at a glance
+- keep a local archive of scans
 
-## What It Does Not Do
+The goal is usefulness without complexity. It is a reporting tool, not a threat platform.
 
-UpdateMeNow v1 intentionally stays focused and safe:
+## Project Scope
+
+### What v1 does
+
+- scans configured RSS feeds and official public APIs
+- defaults to the last 6 hours
+- exports Excel by default
+- supports JSON export
+- groups items by source order
+- sorts newest to oldest within each source
+- detects CVEs, keywords, vendors/products, and broad categories
+- removes obvious duplicates
+
+### What v1 does not do
 
 - no web scraping
 - no browser automation
@@ -45,133 +56,11 @@ UpdateMeNow v1 intentionally stays focused and safe:
 - no AI-generated summaries
 - no exploitation, phishing, malware, or offensive automation support
 
-This is a reporting and awareness tool, not an offensive security tool.
-
-## Quick Start
-
-### Option 1: Clone the Repo and Install Locally
-
-Use this option if you want to run the project, modify it, or contribute.
-
-```bash
-git clone https://github.com/Aanajmi/UpdateMeNow.git
-cd UpdateMeNow
-python3 --version
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-umn --help
-umn
-```
-
-After installation, the `umn` command works because the package defines a console script entry point in `pyproject.toml`.
-
-To confirm your shell is using the local installed command:
-
-```bash
-which umn
-```
-
-You should see a path inside your virtual environment, similar to:
-
-```text
-/path/to/UpdateMeNow/.venv/bin/umn
-```
-
-### Option 2: Install Directly from GitHub with pipx
-
-Use this option if you want `umn` available as a normal command without manually activating a virtual environment.
-
-On macOS:
-
-```bash
-brew install pipx
-pipx ensurepath
-pipx install git+https://github.com/Aanajmi/UpdateMeNow.git
-umn --help
-umn
-```
-
-If `umn` is not found after `pipx ensurepath`, close and reopen your terminal, then try again.
-
-## Requirements
-
-- Python 3.11 or newer
-- Git
-- Internet access for RSS feeds and official APIs
-
-Check your Python version:
-
-```bash
-python3 --version
-```
-
-If your system has multiple Python versions, use a specific one when creating the virtual environment:
-
-```bash
-python3.11 -m venv .venv
-```
-
-or:
-
-```bash
-python3.12 -m venv .venv
-```
-
-## Install and Run by Operating System
-
-### macOS
-
-```bash
-git clone https://github.com/Aanajmi/UpdateMeNow.git
-cd UpdateMeNow
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-umn
-```
-
-### Linux
-
-```bash
-git clone https://github.com/Aanajmi/UpdateMeNow.git
-cd UpdateMeNow
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-umn
-```
-
-### Windows PowerShell
-
-```powershell
-git clone https://github.com/Aanajmi/UpdateMeNow.git
-cd UpdateMeNow
-py -3 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-umn
-```
-
-If PowerShell blocks activation scripts, run:
-
-```powershell
-Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
-```
-
-Then activate the virtual environment again:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
 ## CLI Overview
 
-```text
+The command line structure is:
+
+```bash
 umn
 ├── scan
 ├── config init
@@ -180,27 +69,35 @@ umn
 └── sources test
 ```
 
-Running `umn` with no arguments runs the default scan.
+### Default command
 
-```bash
-umn
-```
-
-That is equivalent to:
-
-```bash
-umn scan --hours 6 --export excel
-```
-
-## Commands
-
-### Scan for Updates
+Running `umn` with no arguments is the same as:
 
 ```bash
 umn scan
 ```
 
-Common examples:
+And `umn scan` defaults to:
+
+```bash
+umn scan --hours 6 --export excel
+```
+
+If you only remember one thing, remember this:
+
+```bash
+umn
+```
+
+That runs the default scan for the last 6 hours and exports Excel.
+
+## Main Commands
+
+### `umn scan`
+
+Collect updates, process them, dedupe them, and export a report.
+
+Common options:
 
 ```bash
 umn scan --hours 24
@@ -208,37 +105,40 @@ umn scan --days 7
 umn scan --source nvd
 umn scan --source cisa_kev --source github
 umn scan --keyword ransomware
-umn scan --keyword ransomware --keyword fortinet
-umn scan --export excel
-umn scan --export json
 umn scan --export excel,json
+umn scan --dedupe strict
+umn scan --dedupe normal
+umn scan --dedupe relaxed
 ```
 
-### Initialize Config Files
+### `umn config init`
+
+Create local editable configuration files.
 
 ```bash
 umn config init
-```
-
-Overwrite existing local config files:
-
-```bash
 umn config init --force
 ```
 
-### Validate Config Files
+### `umn config validate`
+
+Validate configuration files before scanning.
 
 ```bash
 umn config validate
 ```
 
-### List Sources
+### `umn sources list`
+
+Show the configured sources, their groups, types, and enablement status.
 
 ```bash
 umn sources list
 ```
 
-### Test Sources
+### `umn sources test`
+
+Check whether sources are reachable.
 
 ```bash
 umn sources test
@@ -246,68 +146,226 @@ umn sources test --all
 umn sources test --timeout 20
 ```
 
-## Configuration
+## Install and Run
 
-Editable configuration files live in:
+If you are new to Python or command-line tools, use the section for your operating system below.
+If you want `umn` to stay available after reboot and work from any folder, use `pipx`.
 
-```text
-config/sources.yaml
-config/keywords.yaml
+### Install `pipx` once
+
+You only need to do this one time.
+
+#### Mac
+
+```bash
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
 ```
 
-Use `sources.yaml` to control where updates come from.
+Close Terminal and reopen it after `ensurepath`.
 
-Use `keywords.yaml` to control keyword and vendor matching.
+#### Linux
 
-Example workflow:
+```bash
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+```
+
+Close and reopen your terminal after `ensurepath`.
+
+#### Windows
+
+In PowerShell:
+
+```powershell
+py -3.11 -m pip install --user pipx
+py -3.11 -m pipx ensurepath
+```
+
+Close and reopen PowerShell after `ensurepath`.
+
+### Install UpdateMeNow with `pipx`
+
+#### Mac
+
+```bash
+pipx install /path/to/UpdateMeNow
+```
+
+#### Linux
+
+```bash
+pipx install /path/to/UpdateMeNow
+```
+
+#### Windows
+
+```powershell
+pipx install C:\path\to\UpdateMeNow
+```
+
+### Run it from anywhere
+
+After installation, you can run:
+
+```bash
+umn --version
+umn
+```
+
+`umn` and `umn scan` work from any folder. If local files do not exist at
+`config/sources.yaml` and `config/keywords.yaml`, UpdateMeNow uses the packaged
+default config included with the app.
+
+Only create local config files when you want to edit sources or keywords:
+
+```bash
+umn config init
+```
+
+### Update later
+
+If you change the project and want the installed version refreshed:
+
+```bash
+pipx install --force /path/to/UpdateMeNow
+```
+
+## Troubleshooting
+
+### `Config is invalid` and says config files are missing
+
+Bare `umn`, `umn scan`, and `umn sources list` should not fail just because
+you are running from a folder without `config/`. They fall back to packaged
+defaults.
+
+`umn config validate` is different: it checks local editable config files.
+If you want local files to validate or customize, run:
 
 ```bash
 umn config init
 umn config validate
-umn sources list
-umn sources test
-umn scan
 ```
+
+If you installed an older local copy with `pipx`, reinstall from the updated
+project folder:
+
+```bash
+pipx install --force /path/to/UpdateMeNow
+```
+
+### `umn` is not found
+
+- Close and reopen your terminal after `pipx ensurepath`.
+- Run:
+  ```bash
+  pipx ensurepath
+  ```
+- Confirm `pipx` is installed:
+  ```bash
+  pipx --version
+  ```
+
+### `pipx` is not found
+
+- Make sure Python 3.11 or newer is installed.
+- Run:
+  ```bash
+  python3 --version
+  ```
+- Reinstall `pipx`:
+  ```bash
+  python3 -m pip install --user pipx
+  python3 -m pipx ensurepath
+  ```
+
+### PowerShell blocks activation
+
+- Run PowerShell as a normal user first.
+- If you use the developer setup, activate with:
+  ```powershell
+  .\.venv\Scripts\Activate.ps1
+  ```
+- If PowerShell blocks scripts, you may need to adjust your execution policy for your user account.
+
+### Install path is wrong
+
+- Replace `/path/to/UpdateMeNow` or `C:\path\to\UpdateMeNow` with the actual folder path on your computer.
+- If you are using the public release copy, the folder name is `UpdateMeNow`.
+
+### Developer setup
+
+If you are contributing to the project and want a local editable setup instead of `pipx`, use this:
+
+### Mac
+
+1. Open Terminal.
+2. Go to the project folder:
+   ```bash
+   cd /path/to/UpdateMeNow
+   ```
+3. Create a virtual environment:
+   ```bash
+   python3.11 -m venv .venv
+   ```
+4. Activate it:
+   ```bash
+   source .venv/bin/activate
+   ```
+5. Install the project:
+   ```bash
+   python -m pip install -e ".[dev]"
+   ```
+6. Run the tool:
+   ```bash
+   umn
+   ```
+
+The same editable setup works for Linux and Windows if you prefer development mode over `pipx`.
+
+## Configuration
+
+Packaged default config files live in `src/updatemenow/defaults/` and are used
+automatically by runtime commands when no local config exists.
+
+Editable local config files live in `config/` after you run `umn config init`:
+
+- `config/sources.yaml`
+- `config/keywords.yaml`
+
+`umn config init` copies the packaged defaults into `config/` so you can change
+sources and watchlists without editing package code.
+
+The default source catalog focuses on high-signal, low-noise sources and keeps optional feeds disabled until you enable them manually.
 
 ## Report Output
 
-By default, reports are saved in:
+By default, scans write an Excel workbook into `reports/`:
 
-```text
-reports/
-```
-
-Example filename:
-
-```text
+```bash
 reports/UpdateMeNow_Report_2026-05-20_6h.xlsx
 ```
 
-The Excel report includes:
+The workbook is designed to be readable and useful:
 
 - one worksheet named `Cyber Updates`
-- bold headers
+- bold header row
 - frozen top row
-- filters
+- filters enabled
 - clickable URLs
-- source name and source group
-- published date and age
-- title and description
-- detected CVEs
-- matched keywords
-- matched vendors/products
-- basic category
-- scan run time
+- CVE, keyword, vendor, category, and age fields
+- source-group styling and table formatting
 
 JSON export is also available:
 
 ```bash
 umn scan --export json
+umn scan --export excel,json
 ```
 
 ## Duplicate Handling
 
-Duplicate handling can be adjusted with `--dedupe`:
+Duplicate handling is configurable with `--dedupe`:
 
 ```bash
 umn scan --dedupe strict
@@ -315,98 +373,27 @@ umn scan --dedupe normal
 umn scan --dedupe relaxed
 ```
 
-Modes:
+- `strict` keeps only same-URL and same-source title duplicates.
+- `normal` also removes same-title items within the same source group.
+- `relaxed` can collapse obvious cross-feed near-duplicates when the title, CVE, vendor, and timing signals line up.
 
-- `strict`: removes same-URL duplicates and same-source title duplicates
-- `normal`: also removes same-title items within the same source group
-- `relaxed`: collapses likely duplicates when title, CVE, vendor, and timing signals line up
+## Development And Testing
 
-## Development
-
-Install with development dependencies:
-
-```bash
-git clone https://github.com/Aanajmi/UpdateMeNow.git
-cd UpdateMeNow
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e ".[dev]"
-```
-
-Run tests:
-
-```bash
-python -m pytest
-```
-
-Run config checks:
-
-```bash
-umn config validate
-umn sources test
-```
-
-Useful project files:
-
-```text
-README.md
-CHANGELOG.md
-CONTRIBUTING.md
-SECURITY.md
-docs/
-config/
-src/updatemenow/
-tests/
-```
-
-## Safety and Responsible Use
-
-UpdateMeNow is intended for defensive security awareness, learning, and reporting.
-
-The project uses configured RSS feeds and official APIs. It does not include web scraping, offensive automation, phishing support, malware support, credential theft support, or exploitation features.
-
-Use sources respectfully and avoid overloading websites or ignoring source terms.
-
-## Roadmap
-
-Planned v1 milestones:
-
-- project foundation
-- config commands
-- source commands
-- RSS/API collectors
-- processing pipeline
-- Excel and JSON exports
-- release polish
-
-Possible future improvements:
-
-- more official API collectors
-- improved vendor matching
-- better source testing
-- Markdown export
-- scheduled local reports
-- optional dashboard
-
-## Contributing
-
-Contributions are welcome.
-
-Good first contribution ideas:
-
-- add a new RSS source
-- improve documentation
-- add tests
-- improve error messages
-- improve source validation
-- refine category detection
-
-Before opening a pull request, run:
+Run these checks before changing behavior:
 
 ```bash
 python -m pytest
 umn config validate
 ```
+
+
+## Safety
+
+UpdateMeNow is for defensive and educational reporting only. It does not provide offensive capability, scraping, or support for abuse.
+
+Use configured public sources respectfully, and avoid overloading websites or ignoring source terms.
+
+
 
 ## License
 
