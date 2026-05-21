@@ -1,0 +1,26 @@
+watchlists:
+  default:
+    - ransomware
+    - zero-day
+    - exploited
+    - phishing
+    - supply chain
+    - malware
+    - data breach
+    - vulnerability
+    - CVE
+
+  vendors:
+    - Microsoft
+    - Fortinet
+    - Cisco
+    - Palo Alto
+    - Ivanti
+    - VMware
+    - Atlassian
+    - Okta
+    - GitHub
+    - Google
+    - AWS
+    - Azure
+
