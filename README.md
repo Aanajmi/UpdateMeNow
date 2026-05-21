@@ -1,20 +1,33 @@
 # UpdateMeNow
 
-UpdateMeNow is a Python 3.11+ command-line tool for collecting recent cybersecurity updates from free public RSS feeds and official public APIs, then turning them into a clean Excel report.
+UpdateMeNow is a Python 3.11+ command-line tool that collects recent cybersecurity updates from free public RSS feeds and official public APIs, then exports a clean Excel report.
 
-The tool exists for one practical reason: a technical user should be able to run one command, get a reliable snapshot of current cyber advisories and vulnerability news, and not have to manually chase feeds, websites, or spreadsheets.
+The default command is simple:
 
-This public release is intentionally simple:
+```bash
+umn
+```
 
-- one CLI entry point: `umn`
-- one default action: `umn scan`
-- one default export: Excel
-- one default time window: last 6 hours
-- no scraping, no database, no dashboard, no AI summaries
+That scans the last 6 hours, removes obvious duplicates, detects CVEs and keyword/vendor matches, and writes a report into `reports/`.
 
-## Why This Project Exists
+## Table Of Contents
 
-Security information is scattered across many sources:
+- [What It Does](#what-it-does)
+- [Install From GitHub](#install-from-github)
+- [Run UpdateMeNow](#run-updatemenow)
+- [Common Commands](#common-commands)
+- [Configuration](#configuration)
+- [Report Output](#report-output)
+- [Troubleshooting](#troubleshooting)
+- [Development And Testing](#development-and-testing)
+- [Safety](#safety)
+- [License](#license)
+
+## What It Does
+
+UpdateMeNow helps you keep a local cybersecurity update report without manually checking many sites.
+
+It collects from:
 
 - government advisories
 - vulnerability trackers
@@ -22,149 +35,87 @@ Security information is scattered across many sources:
 - threat research feeds
 - security news outlets
 
-UpdateMeNow consolidates those signals into a single report so you can:
+It can:
 
-- spot what changed recently
-- filter by source, keyword, or vendor
-- see CVEs and matches at a glance
-- keep a local archive of scans
+- scan recent cybersecurity updates
+- default to the last 6 hours
+- export Excel by default
+- export JSON when requested
+- detect CVEs, keywords, vendors/products, and broad categories
+- filter by source or keyword
+- remove obvious duplicates
+- list and test configured sources
 
-The goal is usefulness without complexity. It is a reporting tool, not a threat platform.
+It does not include scraping, browser automation, paid APIs, a database, a dashboard, scheduling, alerting, AI summaries, or offensive security automation.
 
-## Project Scope
+## Install From GitHub
 
-### What v1 does
+Use these steps if you just want to download the repository from GitHub and run `umn` from anywhere.
 
-- scans configured RSS feeds and official public APIs
-- defaults to the last 6 hours
-- exports Excel by default
-- supports JSON export
-- groups items by source order
-- sorts newest to oldest within each source
-- detects CVEs, keywords, vendors/products, and broad categories
-- removes obvious duplicates
+Project page: [https://github.com/Aanajmi/UpdateMeNow/tree/main](https://github.com/Aanajmi/UpdateMeNow/tree/main)
 
-### What v1 does not do
+### 1. Install Python
 
-- no web scraping
-- no browser automation
-- no paid APIs
-- no database
-- no dashboard
-- no scheduling
-- no alerting
-- no AI-generated summaries
-- no exploitation, phishing, malware, or offensive automation support
+Install Python 3.11 or newer.
 
-## CLI Overview
+Check your version:
 
-The command line structure is:
+#### Mac Or Linux
 
 ```bash
-umn
-├── scan
-├── config init
-├── config validate
-├── sources list
-└── sources test
+python3 --version
 ```
 
-### Default command
+#### Windows
 
-Running `umn` with no arguments is the same as:
+Open PowerShell and run:
+
+```powershell
+python --version
+```
+
+### 2. Download The Repository
+
+Use either the browser download or Git.
+
+#### Option A: Download ZIP
+
+1. Open [https://github.com/Aanajmi/UpdateMeNow/tree/main](https://github.com/Aanajmi/UpdateMeNow/tree/main).
+2. Click the green `Code` button.
+3. Click `Download ZIP`.
+4. Unzip the file.
+5. The folder will usually be named `UpdateMeNow-main`.
+
+#### Option B: Use Git
 
 ```bash
-umn scan
+git clone https://github.com/Aanajmi/UpdateMeNow.git
+cd UpdateMeNow
 ```
 
-And `umn scan` defaults to:
+### 3. Open A Terminal In The Project Folder
+
+If you downloaded the ZIP, go into the unzipped folder.
+
+#### Mac Or Linux Example
 
 ```bash
-umn scan --hours 6 --export excel
+cd ~/Downloads/UpdateMeNow-main
 ```
 
-If you only remember one thing, remember this:
+#### Windows Example
 
-```bash
-umn
+```powershell
+cd C:\Users\YourName\Downloads\UpdateMeNow-main
 ```
 
-That runs the default scan for the last 6 hours and exports Excel.
+If your folder is somewhere else, use that folder path instead.
 
-## Main Commands
+### 4. Install `pipx`
 
-### `umn scan`
+`pipx` installs command-line Python apps so the `umn` command works from any folder.
 
-Collect updates, process them, dedupe them, and export a report.
-
-Common options:
-
-```bash
-umn scan --hours 24
-umn scan --days 7
-umn scan --source nvd
-umn scan --source cisa_kev --source github
-umn scan --keyword ransomware
-umn scan --export excel,json
-umn scan --dedupe strict
-umn scan --dedupe normal
-umn scan --dedupe relaxed
-```
-
-### `umn config init`
-
-Create local editable configuration files.
-
-```bash
-umn config init
-umn config init --force
-```
-
-### `umn config validate`
-
-Validate configuration files before scanning.
-
-```bash
-umn config validate
-```
-
-### `umn sources list`
-
-Show the configured sources, their groups, types, and enablement status.
-
-```bash
-umn sources list
-```
-
-### `umn sources test`
-
-Check whether sources are reachable.
-
-```bash
-umn sources test
-umn sources test --all
-umn sources test --timeout 20
-```
-
-## Install and Run
-
-If you are new to Python or command-line tools, use the section for your operating system below.
-If you want `umn` to stay available after reboot and work from any folder, use `pipx`.
-
-### Install `pipx` once
-
-You only need to do this one time.
-
-#### Mac
-
-```bash
-python3 -m pip install --user pipx
-python3 -m pipx ensurepath
-```
-
-Close Terminal and reopen it after `ensurepath`.
-
-#### Linux
+#### Mac Or Linux
 
 ```bash
 python3 -m pip install --user pipx
@@ -178,175 +129,141 @@ Close and reopen your terminal after `ensurepath`.
 In PowerShell:
 
 ```powershell
-py -3.11 -m pip install --user pipx
-py -3.11 -m pipx ensurepath
+python -m pip install --user pipx
+python -m pipx ensurepath
 ```
 
 Close and reopen PowerShell after `ensurepath`.
 
-### Install UpdateMeNow with `pipx`
+### 5. Install UpdateMeNow
 
-#### Mac
-
-```bash
-pipx install /path/to/UpdateMeNow
-```
-
-#### Linux
+Run this from inside the project folder:
 
 ```bash
-pipx install /path/to/UpdateMeNow
+pipx install .
 ```
 
-#### Windows
+If you already installed UpdateMeNow and want to refresh it from the latest local copy, run:
 
-```powershell
-pipx install C:\path\to\UpdateMeNow
+```bash
+pipx install --force .
 ```
 
-### Run it from anywhere
+## Run UpdateMeNow
 
-After installation, you can run:
+Check that the command is installed:
 
 ```bash
 umn --version
+```
+
+Run the default scan:
+
+```bash
 umn
 ```
 
-`umn` and `umn scan` work from any folder. If local files do not exist at
-`config/sources.yaml` and `config/keywords.yaml`, UpdateMeNow uses the packaged
-default config included with the app.
+This is the same as:
 
-Only create local config files when you want to edit sources or keywords:
+```bash
+umn scan --hours 6 --export excel
+```
+
+You do not need to create config files before running `umn`. If local files do not exist at `config/sources.yaml` and `config/keywords.yaml`, UpdateMeNow uses the packaged default config included with the app.
+
+Only create local config files if you want to edit sources or keywords:
 
 ```bash
 umn config init
 ```
 
-### Update later
+## Common Commands
 
-If you change the project and want the installed version refreshed:
+### Scan
 
 ```bash
-pipx install --force /path/to/UpdateMeNow
+umn
+umn scan
+umn scan --hours 24
+umn scan --days 7
+umn scan --export excel,json
 ```
 
-## Troubleshooting
+### Filter A Scan
 
-### `Config is invalid` and says config files are missing
+```bash
+umn scan --source nvd
+umn scan --source cisa_kev --source github
+umn scan --keyword ransomware
+umn scan --keyword fortinet --keyword zero-day
+```
 
-Bare `umn`, `umn scan`, and `umn sources list` should not fail just because
-you are running from a folder without `config/`. They fall back to packaged
-defaults.
+### Change Duplicate Handling
 
-`umn config validate` is different: it checks local editable config files.
-If you want local files to validate or customize, run:
+```bash
+umn scan --dedupe strict
+umn scan --dedupe normal
+umn scan --dedupe relaxed
+```
+
+- `strict` keeps only same-URL and same-source title duplicates.
+- `normal` also removes same-title items within the same source group.
+- `relaxed` can collapse obvious cross-feed near-duplicates when the title, CVE, vendor, and timing signals line up.
+
+### Manage Config
 
 ```bash
 umn config init
+umn config init --force
 umn config validate
 ```
 
-If you installed an older local copy with `pipx`, reinstall from the updated
-project folder:
+### Inspect Sources
 
 ```bash
-pipx install --force /path/to/UpdateMeNow
+umn sources list
+umn sources test
+umn sources test --all
+umn sources test --timeout 20
 ```
-
-### `umn` is not found
-
-- Close and reopen your terminal after `pipx ensurepath`.
-- Run:
-  ```bash
-  pipx ensurepath
-  ```
-- Confirm `pipx` is installed:
-  ```bash
-  pipx --version
-  ```
-
-### `pipx` is not found
-
-- Make sure Python 3.11 or newer is installed.
-- Run:
-  ```bash
-  python3 --version
-  ```
-- Reinstall `pipx`:
-  ```bash
-  python3 -m pip install --user pipx
-  python3 -m pipx ensurepath
-  ```
-
-### PowerShell blocks activation
-
-- Run PowerShell as a normal user first.
-- If you use the developer setup, activate with:
-  ```powershell
-  .\.venv\Scripts\Activate.ps1
-  ```
-- If PowerShell blocks scripts, you may need to adjust your execution policy for your user account.
-
-### Install path is wrong
-
-- Replace `/path/to/UpdateMeNow` or `C:\path\to\UpdateMeNow` with the actual folder path on your computer.
-- If you are using the public release copy, the folder name is `UpdateMeNow`.
-
-### Developer setup
-
-If you are contributing to the project and want a local editable setup instead of `pipx`, use this:
-
-### Mac
-
-1. Open Terminal.
-2. Go to the project folder:
-   ```bash
-   cd /path/to/UpdateMeNow
-   ```
-3. Create a virtual environment:
-   ```bash
-   python3.11 -m venv .venv
-   ```
-4. Activate it:
-   ```bash
-   source .venv/bin/activate
-   ```
-5. Install the project:
-   ```bash
-   python -m pip install -e ".[dev]"
-   ```
-6. Run the tool:
-   ```bash
-   umn
-   ```
-
-The same editable setup works for Linux and Windows if you prefer development mode over `pipx`.
 
 ## Configuration
 
-Packaged default config files live in `src/updatemenow/defaults/` and are used
-automatically by runtime commands when no local config exists.
+UpdateMeNow has two kinds of config:
 
-Editable local config files live in `config/` after you run `umn config init`:
+- Packaged defaults in `src/updatemenow/defaults/`
+- Editable local files in `config/`
+
+Runtime commands such as `umn`, `umn scan`, and `umn sources list` use packaged defaults when local config files do not exist.
+
+If you want editable local files, run:
+
+```bash
+umn config init
+```
+
+That creates:
 
 - `config/sources.yaml`
 - `config/keywords.yaml`
 
-`umn config init` copies the packaged defaults into `config/` so you can change
-sources and watchlists without editing package code.
+Then validate them:
 
-The default source catalog focuses on high-signal, low-noise sources and keeps optional feeds disabled until you enable them manually.
+```bash
+umn config validate
+```
+
+`umn config validate` is intentionally strict. It validates local editable config files, so it will report missing files until you run `umn config init`.
 
 ## Report Output
 
 By default, scans write an Excel workbook into `reports/`:
 
-```bash
+```text
 reports/UpdateMeNow_Report_2026-05-20_6h.xlsx
 ```
 
-The workbook is designed to be readable and useful:
+The workbook includes:
 
 - one worksheet named `Cyber Updates`
 - bold header row
@@ -363,37 +280,93 @@ umn scan --export json
 umn scan --export excel,json
 ```
 
-## Duplicate Handling
+## Troubleshooting
 
-Duplicate handling is configurable with `--dedupe`:
+### `umn` Is Not Found
+
+Close and reopen your terminal after running:
 
 ```bash
-umn scan --dedupe strict
-umn scan --dedupe normal
-umn scan --dedupe relaxed
+python3 -m pipx ensurepath
 ```
 
-- `strict` keeps only same-URL and same-source title duplicates.
-- `normal` also removes same-title items within the same source group.
-- `relaxed` can collapse obvious cross-feed near-duplicates when the title, CVE, vendor, and timing signals line up.
+On Windows, use:
 
-## Development And Testing
+```powershell
+python -m pipx ensurepath
+```
 
-Run these checks before changing behavior:
+Then check:
 
 ```bash
-python -m pytest
+pipx --version
+umn --version
+```
+
+### `pipx` Is Not Found
+
+Install it again:
+
+#### Mac Or Linux
+
+```bash
+python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+```
+
+#### Windows
+
+```powershell
+python -m pip install --user pipx
+python -m pipx ensurepath
+```
+
+Close and reopen your terminal.
+
+### `Config is invalid` And Says Config Files Are Missing
+
+Bare `umn`, `umn scan`, and `umn sources list` should not fail just because you are running from a folder without `config/`. They fall back to packaged defaults.
+
+`umn config validate` is different. It checks local editable config files. If you want local files to validate or customize, run:
+
+```bash
+umn config init
 umn config validate
 ```
 
+If you installed an older local copy with `pipx`, reinstall from the updated project folder:
+
+```bash
+pipx install --force .
+```
+
+### Windows Says `python` Is Not Found
+
+Install Python from `https://www.python.org/downloads/`.
+
+During installation, enable the option that adds Python to `PATH`, then close and reopen PowerShell.
+
+## Development And Testing
+
+For local development:
+
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest
+```
+
+Release-readiness guidance lives in:
+
+- `docs/RELEASE_CHECKLIST.md`
+- `CHANGELOG.md`
+- `docs/PROJECT_STRUCTURE.md`
+- `docs/PUBLIC_RELEASE.md`
 
 ## Safety
 
-UpdateMeNow is for defensive and educational reporting only. It does not provide offensive capability, scraping, or support for abuse.
+UpdateMeNow is for defensive and educational reporting only. It does not provide offensive capability, scraping, phishing support, malware support, credential theft support, browser automation, or CAPTCHA bypassing.
 
 Use configured public sources respectfully, and avoid overloading websites or ignoring source terms.
-
-
 
 ## License
 
