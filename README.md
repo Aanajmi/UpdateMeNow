@@ -111,6 +111,28 @@ cd C:\Users\YourName\Downloads\UpdateMeNow-main
 
 If your folder is somewhere else, use that folder path instead.
 
+Before installing, make sure you are in the folder that contains `pyproject.toml`, `README.md`, and `src`.
+
+#### Mac Or Linux Check
+
+```bash
+ls pyproject.toml README.md src
+```
+
+#### Windows Check
+
+```powershell
+dir pyproject.toml, README.md, src
+```
+
+If that command says one of those paths is missing, you are in the wrong folder or downloaded an older broken ZIP. Go back up a folder with:
+
+```powershell
+cd ..
+```
+
+Then run the check again. Do not keep entering repeated folders like `UpdateMeNow-main\UpdateMeNow-main\UpdateMeNow` unless that exact folder contains `pyproject.toml`, `README.md`, and `src`.
+
 ### 4. Install `pipx`
 
 `pipx` installs command-line Python apps so the `umn` command works from any folder.
@@ -338,6 +360,26 @@ If you installed an older local copy with `pipx`, reinstall from the updated pro
 
 ```bash
 pipx install --force .
+```
+
+### Install Fails With `Readme file does not exist: README.md`
+
+You downloaded or uploaded a broken older folder layout, or you are installing from the wrong nested folder.
+
+In PowerShell, go to the folder you are installing from and run:
+
+```powershell
+dir pyproject.toml, README.md, src
+```
+
+The correct install folder must contain all three. If `README.md` is missing, download the latest repository again from:
+
+[https://github.com/Aanajmi/UpdateMeNow/tree/main](https://github.com/Aanajmi/UpdateMeNow/tree/main)
+
+Then install from the folder that contains `pyproject.toml`, `README.md`, and `src`:
+
+```powershell
+pipx install .
 ```
 
 ### Windows Says `python` Is Not Found
