@@ -1,0 +1,280 @@
+sources:
+  - id: cisa_kev
+    name: CISA Known Exploited Vulnerabilities
+    group: government
+    type: api
+    provider: cisa_kev
+    enabled: true
+    default_order: 10
+
+  - id: cisa_alerts
+    name: CISA Cybersecurity Advisories
+    group: government
+    type: rss
+    url: https://www.cisa.gov/cybersecurity-advisories/all.xml
+    enabled: true
+    default_order: 20
+
+  - id: uscert_current_activity
+    name: US-CERT Current Activity
+    group: government
+    type: rss
+    url: https://www.cisa.gov/cybersecurity-advisories/alerts.xml
+    enabled: true
+    default_order: 25
+
+  - id: uk_ncsc_alerts
+    name: UK NCSC Alerts
+    group: government
+    type: rss
+    url: https://www.ncsc.gov.uk/api/1/services/v1/report-rss-feed.xml
+    enabled: true
+    default_order: 26
+
+  - id: cert_eu_advisories
+    name: CERT-EU Security Advisories
+    group: government
+    type: rss
+    url: https://www.cert.europa.eu/publications/security-advisories-rss
+    enabled: true
+    default_order: 27
+
+  - id: canada_cyber_centre
+    name: Canadian Centre for Cyber Security Alerts
+    group: government
+    type: rss
+    url: "https://www.cyber.gc.ca/api/cccs/atom/v1/get?feed=alerts_advisories&lang=en"
+    enabled: true
+    default_order: 28
+
+  - id: jpcert_cc
+    name: JPCERT/CC RSS
+    group: government
+    type: rss
+    url: https://www.jpcert.or.jp/rss/jpcert.rdf
+    enabled: false
+    default_order: 29
+
+  - id: nvd
+    name: NVD CVEs
+    group: vulnerability_database
+    type: api
+    provider: nvd
+    enabled: true
+    default_order: 30
+
+  - id: github
+    name: GitHub Security Advisories
+    group: vulnerability_database
+    type: api
+    provider: github_advisories
+    enabled: true
+    default_order: 40
+
+  - id: mitre_cve_list
+    name: MITRE CVE List Releases
+    group: vulnerability_database
+    type: rss
+    url: https://github.com/CVEProject/cvelistV5/releases.atom
+    enabled: false
+    default_order: 45
+
+  - id: certcc_vuls
+    name: CERT/CC Vulnerability Notes
+    group: vulnerability_database
+    type: rss
+    url: https://www.kb.cert.org/vuls/atomfeed/
+    enabled: true
+    default_order: 60
+
+  - id: sans_isc
+    name: SANS Internet Storm Center
+    group: threat_intelligence
+    type: rss
+    url: https://isc.sans.edu/rssfeed_full.xml
+    enabled: true
+    default_order: 70
+
+  - id: bleepingcomputer
+    name: BleepingComputer
+    group: security_news
+    type: rss
+    url: https://www.bleepingcomputer.com/feed/
+    enabled: true
+    default_order: 80
+
+  - id: krebsonsecurity
+    name: Krebs on Security
+    group: security_news
+    type: rss
+    url: https://krebsonsecurity.com/feed/
+    enabled: true
+    default_order: 90
+
+  - id: zdi_advisories
+    name: Zero Day Initiative Published Advisories
+    group: exploit_vulnerability
+    type: rss
+    url: https://www.zerodayinitiative.com/rss/published/
+    enabled: false
+    default_order: 100
+
+  - id: exploit_db
+    name: Exploit Database
+    group: exploit_vulnerability
+    type: rss
+    url: https://www.exploit-db.com/rss.xml
+    enabled: false
+    default_order: 110
+
+  - id: seclists_full_disclosure
+    name: SecLists Full Disclosure
+    group: exploit_vulnerability
+    type: rss
+    url: https://seclists.org/rss/fulldisclosure.rss
+    enabled: false
+    default_order: 120
+
+  - id: cisco_talos
+    name: Cisco Talos Intelligence
+    group: threat_intelligence
+    type: rss
+    url: https://blog.talosintelligence.com/rss/
+    enabled: false
+    default_order: 130
+
+  - id: unit42
+    name: Unit 42 Threat Research
+    group: threat_intelligence
+    type: rss
+    url: https://unit42.paloaltonetworks.com/feed/
+    enabled: false
+    default_order: 140
+
+  - id: mandiant_threat_research
+    name: Google Threat Intelligence / Mandiant Research
+    group: threat_intelligence
+    type: rss
+    url: https://feeds.feedburner.com/threatintelligence/pvexyqv7v0v
+    enabled: false
+    default_order: 145
+
+  - id: fortiguard_outbreak_alerts
+    name: FortiGuard Labs Outbreak Alerts
+    group: threat_intelligence
+    type: rss
+    url: https://filestore.fortinet.com/fortiguard/rss/outbreakalert.xml
+    enabled: false
+    default_order: 150
+
+  - id: fortiguard_threat_signals
+    name: FortiGuard Labs Threat Signals
+    group: threat_intelligence
+    type: rss
+    url: https://filestore.fortinet.com/fortiguard/rss/threatsignal.xml
+    enabled: false
+    default_order: 151
+
+  - id: crowdstrike_blog
+    name: CrowdStrike Blog
+    group: threat_intelligence
+    type: rss
+    url: https://www.crowdstrike.com/en-us/blog/feed
+    enabled: false
+    default_order: 160
+
+  - id: kaspersky_securelist
+    name: Kaspersky Securelist
+    group: threat_intelligence
+    type: rss
+    url: https://securelist.com/feed/
+    enabled: false
+    default_order: 170
+
+  - id: eset_welivesecurity
+    name: ESET WeLiveSecurity
+    group: threat_intelligence
+    type: rss
+    url: https://www.welivesecurity.com/en/rss/feed/
+    enabled: false
+    default_order: 190
+
+  - id: sentinelone_research
+    name: SentinelOne Research
+    group: threat_intelligence
+    type: rss
+    url: https://www.sentinelone.com/feed/
+    enabled: false
+    default_order: 200
+
+  - id: google_project_zero
+    name: Google Project Zero
+    group: threat_intelligence
+    type: rss
+    url: https://projectzero.google/feed.xml
+    enabled: false
+    default_order: 210
+
+  - id: the_hacker_news
+    name: The Hacker News
+    group: security_news
+    type: rss
+    url: https://feeds.feedburner.com/TheHackersNews
+    enabled: false
+    default_order: 220
+
+  - id: dark_reading
+    name: Dark Reading
+    group: security_news
+    type: rss
+    url: https://www.darkreading.com/rss.xml
+    enabled: false
+    default_order: 230
+
+  - id: help_net_security
+    name: Help Net Security
+    group: security_news
+    type: rss
+    url: https://www.helpnetsecurity.com/feed/
+    enabled: false
+    default_order: 240
+
+  - id: securityweek
+    name: SecurityWeek
+    group: security_news
+    type: rss
+    url: https://www.securityweek.com/feed/
+    enabled: false
+    default_order: 250
+
+  - id: cyberscoop
+    name: CyberScoop
+    group: security_news
+    type: rss
+    url: https://cyberscoop.com/feed/
+    enabled: false
+    default_order: 260
+
+  - id: schneier
+    name: Schneier on Security
+    group: security_news
+    type: rss
+    url: https://www.schneier.com/feed/atom/
+    enabled: false
+    default_order: 270
+
+  - id: sophos_news
+    name: Sophos News
+    group: security_news
+    type: rss
+    url: https://www.sophos.com/en-us/blog/feed
+    enabled: false
+    default_order: 280
+
+  - id: security_affairs
+    name: Security Affairs
+    group: security_news
+    type: rss
+    url: https://securityaffairs.com/feed
+    enabled: false
+    default_order: 290
